@@ -1,0 +1,24 @@
+{
+  "name": "web-form-project",
+  "version": "1.0.0",
+  "description": "Formulario profesional para página web con Node.js y MariaDB",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mysql2": "^3.6.0",
+    "sequelize": "^6.33.0",
+    "dotenv": "^16.3.1",
+    "body-parser": "^1.20.2",
+    "multer": "^1.4.5-lts.1",
+    "express-session": "^1.17.3",
+    "connect-flash": "^0.1.1",
+    "ejs": "^3.1.9"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

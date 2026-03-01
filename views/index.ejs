@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario para Página Web Profesional</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-info">
+                    <h1 class="text-center">Formulario para tu Página Web Profesional</h1>
+                    <p class="text-center">Gracias por confiar en nosotros para crear tu página web. Por favor, completa la siguiente información.</p>
+                    <p class="text-center"><strong>Tiempo estimado:</strong> 15-20 minutos</p>
+                </div>
+
+                <!-- Mensajes Flash -->
+                <% if (success_msg && success_msg.length > 0) { %>
+                    <div class="alert alert-success"><%= success_msg %></div>
+                <% } %>
+                <% if (error_msg && error_msg.length > 0) { %>
+                    <div class="alert alert-danger"><%= error_msg %></div>
+                <% } %>
+
+                <form action="/submit-form" method="POST" enctype="multipart/form-data" id="webForm">
+                    
+                    <!-- DATOS DEL NEGOCIO -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h3>🔹 DATOS DEL NEGOCIO</h3>
+                        </div>
+                        <div class="card-body">
+                            <h4>1. Información Básica</h4>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Nombre del negocio (tal como quieres que aparezca) *</label>
+                                <input type="text" class="form-control" name="nombre_negocio" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Lema o eslogan</label>
+                                <input type="text" class="form-control" name="eslogan">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Giro del negocio *</label>
+                                <input type="text" class="form-control" name="giro_negocio" placeholder="Ej: Consultorio dental, ferretería, restaurante" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Años de experiencia</label>
+                                <input type="text" class="form-control" name="experiencia">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Breve descripción (2-3 párrafos)</label>
+                                <textarea class="form-control" name="descripcion_negocio" rows="4"></textarea>
+                            </div>
+
+                            <h4 class="mt-4">2. Colores de tu Marca</h4>
+                            
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Color principal</label>
+                                    <input type="color" class="form-control form-control-color" name="color_principal" value="#000000">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Color secundario</label>
+                                    <input type="color" class="form-control form-control-color" name="color_secundario" value="#000000">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Color de fondo preferido</label>
+                                    <input type="color" class="form-control form-control-color" name="color_fondo" value="#ffffff">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">¿Tienes logo?</label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="tiene_logo" value="si" id="tiene_logo_si">
+                                    <label class="form-check-label" for="tiene_logo_si">Sí</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="tiene_logo" value="no" id="tiene_logo_no" checked>
+                                    <label class="form-check-label" for="tiene_logo_no">No</label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3" id="logoUploadSection" style="display: none;">
+                                <label class="form-label">Adjuntar logo</label>
+                                <input type="file" class="form-control" name="logo" accept="image/*,.ai">
+                            </div>
+
+                            <div class="mb-3" id="necesitaLogoSec">
+                                <label class="form-label">¿Necesitas que te ayude a crear un logo?</label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="necesita_logo" value="si" id="necesita_logo_si">
+                                    <label class="form-check-label" for="necesita_logo_si">Sí</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="necesita_logo" value="no" id="necesita_logo_no" checked>
+                                    <label class="form-check-label" for="necesita_logo_no">No</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECCIÓN INICIO -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h3>🔹 SECCIÓN "INICIO"</h3>
+                        </div>
+                        <div class="card-body">
+                            <h4>1. Imagen de Fondo</h4>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">¿Tienes una foto de tu local, productos o equipo?</label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="tiene_foto_fondo" value="si" id="tiene_foto_si">
+                                    <label class="form-check-label" for="tiene_foto_si">Sí (adjunto)</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="tiene_foto_fondo" value="no" id="tiene_foto_no" checked>
+                                    <label class="form-check-label" for="tiene_foto_no">No</label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3" id="fotoFondoUpload" style="display: none;">
+                                <label class="form-label">Adjuntar foto de fondo</label>
+                                <input type="file" class="form-control" name="fotos_local" accept="image/*">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Si no tienes foto, ¿qué te gustaría mostrar?</label>
+                                <select class="form-select" name="tipo_imagen_fondo">
+                                    <option value="">Selecciona una opción</option>
+                                    <option value="equipo">Foto del dueño/equipo</option>
+                                    <option value="local">Foto del local</option>
+                                    <option value="productos">Foto de productos</option>
+                                    <option value="generica">Imagen genérica relacionada</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Descripción de la imagen ideal</label>
+                                <textarea class="form-control" name="descripcion_imagen_fondo" rows="3"></textarea>
+                            </div>
+
+                            <h4 class="mt-4">2. Botones de Acción</h4>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">¿Qué quieres que hagan los visitantes?</label><br>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="botones_accion" value="llamar" id="btn_llamar">
+                                    <label class="form-check-label" for="btn_llamar">Llamar por teléfono</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="botones_accion" value="whatsapp" id="btn_whatsapp">
+                                    <label class="form-check-label" for="btn_whatsapp">Enviar WhatsApp</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="botones_accion" value="servicios" id="btn_servicios">
+                                    <label class="form-check-label" for="btn_servicios">Ver servicios</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="botones_accion" value="cita" id="btn_cita">
+                                    <label class="form-check-label" for="btn_cita">Agendar cita</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="botones_accion" value="comprar" id="btn_comprar">
+                                    <label class="form-check-label" for="btn_comprar">Comprar productos</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="botones_accion" value="catalogo" id="btn_catalogo">
+                                    <label class="form-check-label" for="btn_catalogo">Ver catálogo</label>
+                                </div>
+                                <div class="mb-3 mt-2">
+                                    <label class="form-label">Otro:</label>
+                                    <input type="text" class="form-control" name="otro_boton">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECCIÓN SERVICIOS -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-warning">
+                            <h3>🔹 SECCIÓN "SERVICIOS / PRODUCTOS"</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="servicios-container">
+                                <div class="servicio-item mb-3 border p-3">
+                                    <h5>Servicio/Producto #1</h5>
+                                    <div class="row">
+                                        <div class="col-md-4 mb-2">
+                                            <input type="text" class="form-control" name="servicios_nombre[]" placeholder="Nombre del servicio">
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <input type="text" class="form-control" name="servicios_descripcion[]" placeholder="Breve descripción">
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <input type="text" class="form-control" name="servicios_icono[]" placeholder="Icono sugerido">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-secondary" onclick="agregarServicio()">Agregar otro servicio</button>
+                        </div>
+                    </div>
+
+                    <!-- SECCIÓN SOBRE NOSOTROS -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-info text-white">
+                            <h3>🔹 SECCIÓN "SOBRE NOSOTROS"</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Historia del negocio</label>
+                                <textarea class="form-control" name="historia_negocio" rows="3"></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Misión</label>
+                                <textarea class="form-control" name="mision" rows="2"></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Valores</label>
+                                <input type="text" class="form-control" name="valores" placeholder="honestidad, calidad, rapidez, etc.">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">¿Quieres mostrar fotos del equipo?</label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="mostrar_equipo" value="si" id="mostrar_equipo_si">
+                                    <label class="form-check-label" for="mostrar_equipo_si">Sí</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="mostrar_equipo" value="no" id="mostrar_equipo_no" checked>
+                                    <label class="form-check-label" for="mostrar_equipo_no">No</label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Foto del dueño/fundador</label>
+                                <input type="file" class="form-control" name="foto_fundador" accept="image/*">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECCIÓN TESTIMONIOS -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-secondary text-white">
+                            <h3>🔹 SECCIÓN "TESTIMONIOS"</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="testimonios-container">
+                                <div class="testimonio-item mb-3 border p-3">
+                                    <div class="row">
+                                        <div class="col-md-4 mb-2">
+                                            <input type="text" class="form-control" name="testimonios_cliente[]" placeholder="Nombre del cliente">
+                                        </div>
+                                        <div class="col-md-5 mb-2">
+                                            <input type="text" class="form-control" name="testimonios_comentario[]" placeholder="Comentario">
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="testimonio_permiso_0" value="si" id="permiso_0">
+                                                <label class="form-check-label" for="permiso_0">Permite mostrar nombre/foto</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-secondary" onclick="agregarTestimonio()">Agregar otro testimonio</button>
+                        </div>
+                    </div>
+
+                    <!-- SECCIÓN GALERÍA -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-dark text-white">
+                            <h3>🔹 SECCIÓN "GALERÍA DE FOTOS"</h3>
+                        </div>
+                        <div class="card-body">
+                            <label class="form-label">¿Qué imágenes quieres mostrar?</label><br>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="tipos_galeria" value="local" id="gal_local">
+                                <label class="form-check-label" for="gal_local">Fotos del local</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="tipos_galeria" value="equipo" id="gal_equipo">
+                                <label class="form-check-label" for="gal_equipo">Fotos del equipo</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="tipos_galeria" value="productos" id="gal_productos">
+                                <label class="form-check-label" for="gal_productos">Fotos de productos</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="tipos_galeria" value="trabajos" id="gal_trabajos">
+                                <label class="form-check-label" for="gal_trabajos">Fotos de trabajos realizados</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="tipos_galeria" value="antes_despues" id="gal_antes">
+                                <label class="form-check-label" for="gal_antes">Antes/después</label>
+                            </div>
+
+                            <div class="mb-3 mt-3">
+                                <label class="form-label">Otras:</label>
+                                <input type="text" class="form-control" name="otras_imagenes">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">¿Cuántas fotos tienes aproximadamente?</label>
+                                <input type="number" class="form-control" name="cantidad_fotos">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Adjuntar fotos (puedes seleccionar varias)</label>
+                                <input type="file" class="form-control" name="fotos_galeria" multiple accept="image/*">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- INFORMACIÓN DE CONTACTO -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h3>🔹 INFORMACIÓN DE CONTACTO</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Teléfono fijo</label>
+                                    <input type="tel" class="form-control" name="telefono_fijo">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Teléfono celular</label>
+                                    <input type="tel" class="form-control" name="telefono_celular">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">WhatsApp</label>
+                                    <input type="tel" class="form-control" name="whatsapp">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Correo electrónico</label>
+                                    <input type="email" class="form-control" name="email_contacto">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Dirección completa</label>
+                                <input type="text" class="form-control" name="direccion">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">¿Cómo llegar? (referencias)</label>
+                                <textarea class="form-control" name="como_llegar" rows="2"></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Horario de atención</label>
+                                <input type="text" class="form-control" name="horario" placeholder="Ej: Lunes a Viernes 9am-6pm, Sábados 9am-2pm">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- REDES SOCIALES -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h3>🔹 REDES SOCIALES</h3>
+                        </div>
+                        <div class="card-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Red Social</th>
+                                        <th>¿Tienes?</th>
+                                        <th>Link/Usuario</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Facebook</td>
+                                        <td><input type="checkbox" name="redes_facebook_tiene" value="si"></td>
+                                        <td><input type="text" class="form-control" name="redes_facebook_link"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Instagram</td>
+                                        <td><input type="checkbox" name="redes_instagram_tiene" value="si"></td>
+                                        <td><input type="text" class="form-control" name="redes_instagram_link"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Twitter/X</td>
+                                        <td><input type="checkbox" name="redes_twitter_tiene" value="si"></td>
+                                        <td><input type="text" class="form-control" name="redes_twitter_link"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>TikTok</td>
+                                        <td><input type="checkbox" name="redes_tiktok_tiene" value="si"></td>
+                                        <td><input type="text" class="form-control" name="redes_tiktok_link"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>YouTube</td>
+                                        <td><input type="checkbox" name="redes_youtube_tiene" value="si"></td>
+                                        <td><input type="text" class="form-control" name="redes_youtube_link"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>LinkedIn</td>
+                                        <td><input type="checkbox" name="redes_linkedin_tiene" value="si"></td>
+                                        <td><input type="text" class="form-control" name="redes_linkedin_link"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- GOOGLE MAPS -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-warning">
+                            <h3>🔹 GOOGLE MAPS</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">¿Quieres que aparezca un mapa con tu ubicación?</label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="mostrar_mapa" value="si" id="mapa_si">
+                                    <label class="form-check-label" for="mapa_si">Sí</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="mostrar_mapa" value="no" id="mapa_no" checked>
+                                    <label class="form-check-label" for="mapa_no">No</label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3" id="mapaDireccion">
+                                <label class="form-label">Dirección exacta para el mapa</label>
+                                <input type="text" class="form-control" name="direccion_mapa">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Código iframe de Google Maps</label>
+                                <textarea class="form-control" name="codigo_mapa" rows="4" placeholder="Pega aquí el código iframe"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PREGUNTAS ADICIONALES -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-info text-white">
+                            <h3>🔹 PREGUNTAS ADICIONALES</h3>
+                        </div>
+                        <div class="card-body">
+                            <h4>1. Objetivos de la página</h4>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="objetivos" value="llamar" id="obj_llamar">
+                                        <label class="form-check-label" for="obj_llamar">Que me llamen por teléfono</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="objetivos" value="whatsapp" id="obj_whatsapp">
+                                        <label class="form-check-label" for="obj_whatsapp">Que me escriban por WhatsApp</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="objetivos" value="local" id="obj_local">
+                                        <label class="form-check-label" for="obj_local">Que lleguen a mi local físico</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="objetivos" value="catalogo" id="obj_catalogo">
+                                        <label class="form-check-label" for="obj_catalogo">Mostrar mi catálogo de productos</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="objetivos" value="vender" id="obj_vender">
+                                        <label class="form-check-label" for="obj_vender">Vender en línea</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="objetivos" value="citas" id="obj_citas">
+                                        <label class="form-check-label" for="obj_citas">Agendar citas</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="objetivos" value="conocer" id="obj_conocer">
+                                        <label class="form-check-label" for="obj_conocer">Dar a conocer mi negocio</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3 mt-3">
+                                <label class="form-label">Otro objetivo:</label>
+                                <input type="text" class="form-control" name="otro_objetivo">
+                            </div>
+
+                            <h4 class="mt-4">2. Competencia (URLs de páginas web para inspirarme)</h4>
+                            <div class="mb-3">
+                                <textarea class="form-control" name="competencia" rows="3" placeholder="Ej: www.competencia1.com, www.competencia2.com"></textarea>
+                            </div>
+
+                            <h4 class="mt-4">3. Páginas que te gustan</h4>
+                            <div class="mb-3">
+                                <textarea class="form-control" name="paginas_inspiracion" rows="3" placeholder="URLs de páginas que te gusten"></textarea>
+                            </div>
+
+                            <h4 class="mt-4">4. Contenido Extra</h4>
+                            <div class="mb-3">
+                                <label class="form-label">¿Algo más que quieras agregar? ¿Promociones? ¿Eventos?</label>
+                                <textarea class="form-control" name="contenido_extra" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MATERIAL ADICIONAL -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-secondary text-white">
+                            <h3>🔹 MATERIAL ADICIONAL A ADJUNTAR</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>Puedes adjuntar múltiples archivos (logo, fotos, catálogos, promociones, etc.)</p>
+                            <div class="mb-3">
+                                <input type="file" class="form-control" name="material_adicional" multiple>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CONFIRMACIÓN -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-danger text-white">
+                            <h3>🔹 CONFIRMACIÓN Y ACUERDOS</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Nombre del responsable *</label>
+                                <input type="text" class="form-control" name="nombre_responsable" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Teléfono de contacto directo *</label>
+                                <input type="tel" class="form-control" name="telefono_contacto" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Email para recibir notificaciones *</label>
+                                <input type="email" class="form-control" name="email_notificaciones" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">¿Cómo prefieres que te contacte durante el proceso?</label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="preferencia_contacto" value="whatsapp" id="pref_whatsapp">
+                                    <label class="form-check-label" for="pref_whatsapp">WhatsApp</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="preferencia_contacto" value="email" id="pref_email">
+                                    <label class="form-check-label" for="pref_email">Email</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="preferencia_contacto" value="llamada" id="pref_llamada">
+                                    <label class="form-check-label" for="pref_llamada">Llamada</label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Fecha límite para tener la página (si aplica)</label>
+                                <input type="date" class="form-control" name="fecha_limite">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mb-5">
+                        <button type="submit" class="btn btn-primary btn-lg">Enviar Formulario</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mostrar/ocultar campo de logo según selección
+        document.querySelectorAll('input[name="tiene_logo"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const logoUpload = document.getElementById('logoUploadSection');
+                if (this.value === 'si') {
+                    logoUpload.style.display = 'block';
+                } else {
+                    logoUpload.style.display = 'none';
+                }
+            });
+        });
+
+        // Función para agregar más servicios
+        let servicioCount = 1;
+        function agregarServicio() {
+            servicioCount++;
+            const container = document.getElementById('servicios-container');
+            const nuevoServicio = document.createElement('div');
+            nuevoServicio.className = 'servicio-item mb-3 border p-3';
+            nuevoServicio.innerHTML = `
+                <h5>Servicio/Producto #${servicioCount}</h5>
+                <div class="row">
+                    <div class="col-md-4 mb-2">
+                        <input type="text" class="form-control" name="servicios_nombre[]" placeholder="Nombre del servicio">
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <input type="text" class="form-control" name="servicios_descripcion[]" placeholder="Breve descripción">
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <input type="text" class="form-control" name="servicios_icono[]" placeholder="Icono sugerido">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove()">Eliminar</button>
+            `;
+            container.appendChild(nuevoServicio);
+        }
+
+        // Función para agregar más testimonios
+        let testimonioCount = 1;
+        function agregarTestimonio() {
+            testimonioCount++;
+            const container = document.getElementById('testimonios-container');
+            const nuevoTestimonio = document.createElement('div');
+            nuevoTestimonio.className = 'testimonio-item mb-3 border p-3';
+            nuevoTestimonio.innerHTML = `
+                <div class="row">
+                    <div class="col-md-4 mb-2">
+                        <input type="text" class="form-control" name="testimonios_cliente[]" placeholder="Nombre del cliente">
+                    </div>
+                    <div class="col-md-5 mb-2">
+                        <input type="text" class="form-control" name="testimonios_comentario[]" placeholder="Comentario">
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="testimonio_permiso_${testimonioCount}" value="si" id="permiso_${testimonioCount}">
+                            <label class="form-check-label" for="permiso_${testimonioCount}">Permite mostrar nombre/foto</label>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove()">Eliminar</button>
+            `;
+            container.appendChild(nuevoTestimonio);
+        }
+    </script>
+</body>
+</html>
