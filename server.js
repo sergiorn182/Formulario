@@ -15,10 +15,9 @@ dotenv.config();
 const { sequelize, testConnection } = require('./config/database');
 
 // 4. IMPORTAR MODELOS (después de la conexión)
-const FormularioWeb = require('./models/FormData');
-const Servicio = require('./models/Servicio'); // Si tienes estos modelos
-const Testimonio = require('./models/Testimonio'); // Si tienes estos modelos
-const Galeria = require('./models/Galeria'); // Si tienes estos modelos
+
+const { FormularioWeb, Servicio, Testimonio, Galeria } = require('./models/FormData');
+
 
 // 5. Verificaciones
 console.log('✅ FormularioWeb cargado:', typeof FormularioWeb.create); // Debe mostrar 'function'
