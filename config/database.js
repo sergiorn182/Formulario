@@ -1,6 +1,3 @@
-import mysql from "mysql2/promise";
-
-
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
