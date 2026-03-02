@@ -1,4 +1,4 @@
-// server.js - Parte de las importaciones
+// 1. Módulos de terceros PRIMERO
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -10,13 +10,13 @@ const fs = require('fs');
 
 dotenv.config();
 
-const app = express();
 
 // IMPORTACIÓN CORREGIDA - Destructuring
 const { sequelize, testConnection } = require('./config/database');
 const FormularioWeb = require('./models/FormData');  // <-- ESTO ES UNA FUNCIÓN, NO DESTRUCTURING
 
 // Verificar que sequelize se importó bien
+console.log('✅ FormularioWeb cargado:', typeof FormularioWeb.create); // Debe mostrar 'function'
 console.log('🔍 Verificando sequelize:', sequelize ? '✅ OK' : '❌ UNDEFINED');
 
 ////////////////////////////////
