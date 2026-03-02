@@ -15,6 +15,7 @@ dotenv.config();
 const { sequelize, testConnection } = require('./config/database');
 const FormularioWeb = require('./models/FormData');  // <-- ESTO ES UNA FUNCIÓN, NO DESTRUCTURING
 
+module.exports = FormularioWeb;
 // Verificar que sequelize se importó bien
 console.log('✅ FormularioWeb cargado:', typeof FormularioWeb.create); // Debe mostrar 'function'
 console.log('🔍 Verificando sequelize:', sequelize ? '✅ OK' : '❌ UNDEFINED');
