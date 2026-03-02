@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
 
-const FormData = sequelize.define('FormularioWeb', {
+const FormularioWeb = sequelize.define('FormularioWeb', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -118,7 +118,7 @@ const Servicio = sequelize.define('Servicio', {
     form_id: {
         type: DataTypes.INTEGER,
         references: {
-            model: FormData,
+            model: FormularioWeb,
             key: 'id'
         }
     },
@@ -139,7 +139,7 @@ const Testimonio = sequelize.define('Testimonio', {
     form_id: {
         type: DataTypes.INTEGER,
         references: {
-            model: FormData,
+            model: FormularioWeb,
             key: 'id'
         }
     },
@@ -160,7 +160,7 @@ const Galeria = sequelize.define('Galeria', {
     form_id: {
         type: DataTypes.INTEGER,
         references: {
-            model: FormData,
+            model: FormularioWeb,
             key: 'id'
         }
     },
@@ -173,8 +173,8 @@ const Galeria = sequelize.define('Galeria', {
 });
 
 // Establecer relaciones
-FormData.hasMany(Servicio, { foreignKey: 'form_id' });
-FormData.hasMany(Testimonio, { foreignKey: 'form_id' });
-FormData.hasMany(Galeria, { foreignKey: 'form_id' });
+FormularioWeb.hasMany(Servicio, { foreignKey: 'form_id' });
+FormularioWeb.hasMany(Testimonio, { foreignKey: 'form_id' });
+FormularioWeb.hasMany(Galeria, { foreignKey: 'form_id' });
 
 module.exports = { FormularioWeb, Servicio, Testimonio, Galeria };
