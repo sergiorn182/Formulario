@@ -14,7 +14,7 @@ const app = express();
 
 // IMPORTACIÓN CORREGIDA - Destructuring
 const { sequelize, testConnection } = require('./config/database');
-const FormData = require('./models/FormData');  // <-- ESTO ES UNA FUNCIÓN, NO DESTRUCTURING
+const FormularioWeb = require('./models/FormData');  // <-- ESTO ES UNA FUNCIÓN, NO DESTRUCTURING
 
 // Verificar que sequelize se importó bien
 console.log('🔍 Verificando sequelize:', sequelize ? '✅ OK' : '❌ UNDEFINED');
@@ -114,7 +114,7 @@ app.post('/submit-form', upload.fields([
             [];
 
         // Guardar datos principales del formulario
-        const formData = await FormData.create({
+        const FormularioWeb = await FormularioWeb.create({
             negocio_nombre: req.body.nombre_negocio,
             negocio_eslogan: req.body.eslogan,
             negocio_giro: req.body.giro_negocio,
@@ -178,7 +178,7 @@ app.post('/submit-form', upload.fields([
 
         // Procesar logo
         if (req.files && req.files['logo']) {
-            await formData.update({
+            await FormularioWeb.update({
                 logo_filename: req.files['logo'][0].filename,
                 logo_path: req.files['logo'][0].path
             });
@@ -186,7 +186,7 @@ app.post('/submit-form', upload.fields([
 
         // Procesar foto del fundador
         if (req.files && req.files['foto_fundador']) {
-            await formData.update({
+            await FormularioWeb.update({
                 sobre_foto_fundador_filename: req.files['foto_fundador'][0].filename
             });
         }
@@ -200,7 +200,7 @@ app.post('/submit-form', upload.fields([
             for (let i = 0; i < nombres.length; i++) {
                 if (nombres[i]) {
                     await Servicio.create({
-                        form_id: formData.id,
+                        form_id: FormularioWeb.id,
                         nombre: nombres[i],
                         descripcion: descripciones[i],
                         icono: iconos[i]
@@ -218,7 +218,7 @@ app.post('/submit-form', upload.fields([
                 if (clientes[i]) {
                     const permiso = req.body[`testimonio_permiso_${i}`] === 'si';
                     await Testimonio.create({
-                        form_id: formData.id,
+                        form_id: FormularioWeb.id,
                         cliente: clientes[i],
                         comentario: comentarios[i],
                         permitir_mostrar: permiso
@@ -231,7 +231,7 @@ app.post('/submit-form', upload.fields([
         if (req.files && req.files['fotos_galeria']) {
             for (const file of req.files['fotos_galeria']) {
                 await Galeria.create({
-                    form_id: formData.id,
+                    form_id: FormularioWeb.id,
                     filename: file.filename,
                     path: file.path,
                     tipo: 'galeria'
@@ -257,7 +257,7 @@ app.get('/success', (req, res) => {
 // Ruta para ver todos los formularios (admin)
 app.get('/admin', async (req, res) => {
     try {
-        const forms = await FormData.findAll({
+        const forms = await FormularioWeb.findAll({
             include: [Servicio, Testimonio, Galeria],
             order: [['fecha_creacion', 'DESC']]
         });
@@ -270,7 +270,7 @@ app.get('/admin', async (req, res) => {
 // Ruta para ver un formulario específico
 app.get('/admin/:id', async (req, res) => {
     try {
-        const form = await FormData.findByPk(req.params.id, {
+        const form = await FormularioWeb.findByPk(req.params.id, {
             include: [Servicio, Testimonio, Galeria]
         });
         if (form) {
