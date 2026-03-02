@@ -177,4 +177,4 @@ FormData.hasMany(Servicio, { foreignKey: 'form_id' });
 FormData.hasMany(Testimonio, { foreignKey: 'form_id' });
 FormData.hasMany(Galeria, { foreignKey: 'form_id' });
 
-module.exports = { FormData, Servicio, Testimonio, Galeria };
+module.exports = { FormularioWeb, Servicio, Testimonio, Galeria };
