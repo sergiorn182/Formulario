@@ -8,20 +8,26 @@ const flash = require('connect-flash');
 const dotenv = require('dotenv');
 const fs = require('fs');
 
+// 2. Configurar dotenv
 dotenv.config();
 
-
-// IMPORTACIÓN CORREGIDA - Destructuring
+// 3. IMPORTACIONES - Destructuring correcto
 const { sequelize, testConnection } = require('./config/database');
-const FormularioWeb = require('./models/FormData');  // <-- ESTO ES UNA FUNCIÓN, NO DESTRUCTURING
 
-module.exports = FormularioWeb;
-// Verificar que sequelize se importó bien
+// 4. IMPORTAR MODELOS (después de la conexión)
+const FormularioWeb = require('./models/FormData');
+const Servicio = require('./models/Servicio'); // Si tienes estos modelos
+const Testimonio = require('./models/Testimonio'); // Si tienes estos modelos
+const Galeria = require('./models/Galeria'); // Si tienes estos modelos
+
+// 5. Verificaciones
 console.log('✅ FormularioWeb cargado:', typeof FormularioWeb.create); // Debe mostrar 'function'
 console.log('🔍 Verificando sequelize:', sequelize ? '✅ OK' : '❌ UNDEFINED');
 
-////////////////////////////////
+// 6. Crear la aplicación Express DESPUÉS de las importaciones
+const app = express();
 
+////////////////////////////////
 // Configuración de multer para subida de archivos
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -64,8 +70,7 @@ app.use(session({
 }));
 app.use(flash());
 
-// Configuración de vistas
-app.set('view engine', 'html');
+// Configuración de vistas - CORREGIDO (solo un engine)
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
@@ -80,6 +85,8 @@ app.use((req, res, next) => {
 sequelize.sync({ alter: true }).then(() => {
     console.log('Base de datos sincronizada');
     testConnection();
+}).catch(err => {
+    console.error('Error sincronizando BD:', err);
 });
 
 // Ruta principal - mostrar formulario
@@ -114,8 +121,8 @@ app.post('/submit-form', upload.fields([
             (Array.isArray(req.body.objetivos) ? req.body.objetivos : [req.body.objetivos]) : 
             [];
 
-        // Guardar datos principales del formulario
-        const FormularioWeb = await FormularioWeb.create({
+        // Guardar datos principales del formulario - CORREGIDO (variable diferente)
+        const nuevoFormulario = await FormularioWeb.create({
             negocio_nombre: req.body.nombre_negocio,
             negocio_eslogan: req.body.eslogan,
             negocio_giro: req.body.giro_negocio,
@@ -179,7 +186,7 @@ app.post('/submit-form', upload.fields([
 
         // Procesar logo
         if (req.files && req.files['logo']) {
-            await FormularioWeb.update({
+            await nuevoFormulario.update({
                 logo_filename: req.files['logo'][0].filename,
                 logo_path: req.files['logo'][0].path
             });
@@ -187,13 +194,13 @@ app.post('/submit-form', upload.fields([
 
         // Procesar foto del fundador
         if (req.files && req.files['foto_fundador']) {
-            await FormularioWeb.update({
+            await nuevoFormulario.update({
                 sobre_foto_fundador_filename: req.files['foto_fundador'][0].filename
             });
         }
 
-        // Procesar servicios
-        if (req.body.servicios_nombre) {
+        // Procesar servicios (si el modelo existe)
+        if (req.body.servicios_nombre && typeof Servicio !== 'undefined') {
             const nombres = Array.isArray(req.body.servicios_nombre) ? req.body.servicios_nombre : [req.body.servicios_nombre];
             const descripciones = Array.isArray(req.body.servicios_descripcion) ? req.body.servicios_descripcion : [req.body.servicios_descripcion];
             const iconos = Array.isArray(req.body.servicios_icono) ? req.body.servicios_icono : [req.body.servicios_icono];
@@ -201,7 +208,7 @@ app.post('/submit-form', upload.fields([
             for (let i = 0; i < nombres.length; i++) {
                 if (nombres[i]) {
                     await Servicio.create({
-                        form_id: FormularioWeb.id,
+                        form_id: nuevoFormulario.id,
                         nombre: nombres[i],
                         descripcion: descripciones[i],
                         icono: iconos[i]
@@ -210,8 +217,8 @@ app.post('/submit-form', upload.fields([
             }
         }
 
-        // Procesar testimonios
-        if (req.body.testimonios_cliente) {
+        // Procesar testimonios (si el modelo existe)
+        if (req.body.testimonios_cliente && typeof Testimonio !== 'undefined') {
             const clientes = Array.isArray(req.body.testimonios_cliente) ? req.body.testimonios_cliente : [req.body.testimonios_cliente];
             const comentarios = Array.isArray(req.body.testimonios_comentario) ? req.body.testimonios_comentario : [req.body.testimonios_comentario];
             
@@ -219,7 +226,7 @@ app.post('/submit-form', upload.fields([
                 if (clientes[i]) {
                     const permiso = req.body[`testimonio_permiso_${i}`] === 'si';
                     await Testimonio.create({
-                        form_id: FormularioWeb.id,
+                        form_id: nuevoFormulario.id,
                         cliente: clientes[i],
                         comentario: comentarios[i],
                         permitir_mostrar: permiso
@@ -228,11 +235,11 @@ app.post('/submit-form', upload.fields([
             }
         }
 
-        // Procesar fotos de galería
-        if (req.files && req.files['fotos_galeria']) {
+        // Procesar fotos de galería (si el modelo existe)
+        if (req.files && req.files['fotos_galeria'] && typeof Galeria !== 'undefined') {
             for (const file of req.files['fotos_galeria']) {
                 await Galeria.create({
-                    form_id: FormularioWeb.id,
+                    form_id: nuevoFormulario.id,
                     filename: file.filename,
                     path: file.path,
                     tipo: 'galeria'
@@ -250,16 +257,17 @@ app.post('/submit-form', upload.fields([
     }
 });
 
-// Ruta de éxito
-app.get('/success', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'success.html'));
-});
-
 // Ruta para ver todos los formularios (admin)
 app.get('/admin', async (req, res) => {
     try {
+        // Verificar qué modelos existen para incluirlos
+        const include = [];
+        if (typeof Servicio !== 'undefined') include.push(Servicio);
+        if (typeof Testimonio !== 'undefined') include.push(Testimonio);
+        if (typeof Galeria !== 'undefined') include.push(Galeria);
+        
         const forms = await FormularioWeb.findAll({
-            include: [Servicio, Testimonio, Galeria],
+            include: include.length > 0 ? include : undefined,
             order: [['fecha_creacion', 'DESC']]
         });
         res.json(forms);
@@ -271,8 +279,13 @@ app.get('/admin', async (req, res) => {
 // Ruta para ver un formulario específico
 app.get('/admin/:id', async (req, res) => {
     try {
+        const include = [];
+        if (typeof Servicio !== 'undefined') include.push(Servicio);
+        if (typeof Testimonio !== 'undefined') include.push(Testimonio);
+        if (typeof Galeria !== 'undefined') include.push(Galeria);
+        
         const form = await FormularioWeb.findByPk(req.params.id, {
-            include: [Servicio, Testimonio, Galeria]
+            include: include.length > 0 ? include : undefined
         });
         if (form) {
             res.json(form);
@@ -285,7 +298,7 @@ app.get('/admin/:id', async (req, res) => {
 });
 
 // Iniciar servidor
-const PORT = process.env.PORT ||3000 ;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en https://sctechnology.sctechnology.shop/:${PORT}`);
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
