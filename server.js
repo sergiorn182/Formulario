@@ -1,3 +1,4 @@
+// server.js - Parte de las importaciones
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -10,8 +11,15 @@ const fs = require('fs');
 dotenv.config();
 
 const app = express();
+
+// IMPORTACIÓN CORREGIDA - Destructuring
 const { sequelize, testConnection } = require('./config/database');
-const { FormData, Servicio, Testimonio, Galeria } = require('./models/FormData');
+const FormData = require('./models/FormData');  // <-- ESTO ES UNA FUNCIÓN, NO DESTRUCTURING
+
+// Verificar que sequelize se importó bien
+console.log('🔍 Verificando sequelize:', sequelize ? '✅ OK' : '❌ UNDEFINED');
+
+////////////////////////////////
 
 // Configuración de multer para subida de archivos
 const storage = multer.diskStorage({
