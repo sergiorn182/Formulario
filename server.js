@@ -276,7 +276,7 @@ app.get('/admin/:id', async (req, res) => {
 });
 
 // Iniciar servidor
-const PORT = process.env.PORT || ;
+const PORT = process.env.PORT ||300 ;
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en https://sctechnology.sctechnology.shop/:${PORT}`);
 });
