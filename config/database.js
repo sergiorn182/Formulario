@@ -1,36 +1,54 @@
-// config/database.js
-const { Sequelize } = require('sequelize');
-require('dotenv').config();
+import mysql from 'mysql2/promise';
+import 'dotenv/config';
 
-// Crear la instancia de Sequelize
-const sequelize = new Sequelize(
-    process.env.DB_NAME,
-    process.env.DB_USER,
-    process.env.DB_PASSWORD,
-    {
-        host: process.env.DB_HOST,
-        dialect: 'mysql',
-        logging: false,
-        pool: {
-            max: 5,
-            min: 0,
-            acquire: 30000,
-            idle: 10000
-        }
-    }
-);
+let pool = null;
 
-const testConnection = async () => {
+async function connectDB() {
     try {
-        await sequelize.authenticate();
-        console.log('✅ Conexión a MariaDB establecida correctamente.');
+        pool = mysql.createPool({
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME,
+            waitForConnections: true,
+            connectionLimit: 10,
+            queueLimit: 0
+        });
+        console.log('✅ MySQL conectado');
     } catch (error) {
-        console.error('❌ Error conectando a MariaDB:', error);
+        console.error('❌ Error MySQL:', error);
     }
-};
+}
 
-// Exportar AMBAS cosas correctamente
-module.exports = { 
-    sequelize,  // <-- ESTO ES LO IMPORTANTE
-    testConnection 
-};
+function getPool() {
+    if (!pool) {
+        throw new Error('Base de datos no inicializada');
+    }
+    return pool;
+}
+
+async function query(sql, params = []) {
+    const poolInstance = getPool();
+    const [rows] = await poolInstance.execute(sql, params);
+    return rows;
+}
+
+async function closeDB() {
+    if (pool) {
+        await pool.end();
+        console.log('🔒 MySQL cerrado');
+    }
+}
+
+export { connectDB, getPool, query, closeDB };
+export default { connectDB, getPool, query, closeDB };
+
+// ✅ CONEXIÓN AUTOMÁTICA AL IMPORTAR EL MÓDULO
+(async () => {
+    try {
+        await connectDB();
+        console.log('✅ Conexión automática exitosa');
+    } catch (error) {
+        console.error('❌ Error en conexión automática:', error);
+    }
+})();
